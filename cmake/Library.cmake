@@ -50,7 +50,7 @@ function(install_library)
 		ARG # Options / Single Value / Multi Value
 		""	
 		"TARGET_NAME;"
-		"PUBLIC_HEADERS;PUBLIC_INCLUDE_DIRS"
+		"PUBLIC_INCLUDE_DIRS"
 		${ARGN})
 
 	if (NOT DEFINED ARG_TARGET_NAME)
@@ -68,8 +68,6 @@ function(install_library)
 	message(STATUS "- The library Path : ${LIB_DIR}")
 	message(STATUS "- The include Path : ${INCLUDE_DIR}")
 
-	message(${ARG_PUBLIC_INCLUDE_DIRS})
-
 	target_include_directories(${ARG_TARGET_NAME} PUBLIC ${ARG_PUBLIC_INCLUDE_DIRS} ${INCLUDE_DIR})
 
 	install(TARGETS ${ARG_TARGET_NAME}
@@ -78,7 +76,7 @@ function(install_library)
 		LIBRARY DESTINATION ${LIB_DIR}
 	)
 
-	install(FILES ${ARG_PUBLIC_HEADERS} DESTINATION ${INCLUDE_DIR}/${ARG_TARGET_NAME})
+	install(DIRECTORY ${ARG_PUBLIC_INCLUDE_DIRS}/ DESTINATION ${INCLUDE_DIR}/${ARG_TARGET_NAME})
 
 endfunction()
 
