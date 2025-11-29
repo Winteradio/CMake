@@ -1,9 +1,13 @@
 # ------ Set the variables for the library options ------- #
-message(STATUS "# Set the options for the library")
+message(STATUS "# Set the options for the library : ${PROJECT_NAME}")
 
 set(INCLUDE_DIR ${CMAKE_BINARY_DIR}/include CACHE PATH "Include files Path")
 set(LIB_DIR ${CMAKE_BINARY_DIR}/lib CACHE PATH "Library files Path")
 set(BIN_DIR ${CMAKE_BINARY_DIR}/bin CACHE PATH "Execute files Path")
+
+message(STATUS "- The Binary Directory : ${BIN_DIR}")
+message(STATUS "- The Library Directory : ${LIB_DIR}")
+message(STATUS "- The Include Directory : ${INCLUDE_DIR}")
 
 # ------ Set the options for the library ------- #
 function(create_library)
@@ -27,9 +31,6 @@ function(create_library)
 
 	message(STATUS "# Create the library : ${ARG_TARGET_NAME}")
 	message(STATUS "- The Library Type : ${LIBRARY_TYPE}")
-	message(STATUS "- The Binary Directory : ${BIN_DIR}")
-	message(STATUS "- The Library Directory : ${LIB_DIR}")
-	message(STATUS "- The Include Directory : ${INCLUDE_DIR}")
 
 	add_library(${ARG_TARGET_NAME} ${LIBRARY_TYPE})
 
@@ -41,6 +42,12 @@ function(create_library)
 	if (WIN32 AND ${ARG_SHARED_LIBRARY})
 		set_target_properties(${ARG_TARGET_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 	endif()
+
+	set_target_properties(${ARG_TARGET_NAME} PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+		ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+		LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+	)
 
 endfunction()
 
@@ -63,10 +70,7 @@ function(install_library)
 		set(ARG_PUBLIC_INCLUDE_DIRS "")
 	endif()
 
-	message(STATUS "# Install the library")
-	message(STATUS "- The binary Path : ${BIN_DIR}")
-	message(STATUS "- The library Path : ${LIB_DIR}")
-	message(STATUS "- The include Path : ${INCLUDE_DIR}")
+	message(STATUS "# Install the library : ${ARG_TARGET_NAME}")
 
 	target_include_directories(${ARG_TARGET_NAME} PUBLIC ${ARG_PUBLIC_INCLUDE_DIRS} ${INCLUDE_DIR})
 
