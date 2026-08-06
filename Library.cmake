@@ -108,6 +108,14 @@ function(install_library)
 
 	message(STATUS "# Install the library : ${ARG_TARGET_NAME}")
 
+	# INTERFACE library targets have no compiled object of their own, so CMake only
+	# accepts the INTERFACE keyword for their properties - PUBLIC/PRIVATE are rejected
+	# even if that's what the caller (or our own default above) asked for.
+	get_target_property(ARG_TARGET_TYPE ${ARG_TARGET_NAME} TYPE)
+	if (${ARG_TARGET_TYPE} STREQUAL "INTERFACE_LIBRARY")
+		set(INCLUDE_PROPERTY INTERFACE)
+	endif()
+
 	target_include_directories(${ARG_TARGET_NAME} ${INCLUDE_PROPERTY} ${ARG_INCLUDE_DIRS} ${INCLUDE_DIR})
 
 	install(TARGETS ${ARG_TARGET_NAME}

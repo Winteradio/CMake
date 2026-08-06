@@ -25,6 +25,14 @@ function(project_options)
 
 	message(STATUS "- Compiler : ${CMAKE_CXX_COMPILER_ID}")
 
+	# INTERFACE library targets have no compiled object of their own, so CMake only
+	# accepts the INTERFACE keyword for their properties - PUBLIC/PRIVATE are rejected
+	# even if that's what the caller (or our own default above) asked for.
+	get_target_property(ARG_TARGET_TYPE ${PROJECT_NAME} TYPE)
+	if (${ARG_TARGET_TYPE} STREQUAL "INTERFACE_LIBRARY")
+		set(TARGET_TYPE INTERFACE)
+	endif()
+
 	target_compile_features(${PROJECT_NAME} ${TARGET_TYPE} cxx_std_17)
 
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
